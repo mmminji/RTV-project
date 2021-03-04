@@ -11,9 +11,9 @@ numpy<1.17
 ~~~
 
 ### - Process
-1) Original Data Download
+1) Original Data Download  
 https://drive.google.com/drive/folders/1kCTwTwEk_CE9nc6q0snXm3lALrz_ZUDN?usp=sharing
-2) Preprocess
+ Preprocess
 ~~~
 python preprocess.py
 ~~~
