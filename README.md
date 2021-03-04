@@ -1,6 +1,6 @@
 # RTV-project
 
-## 1. Tabel-to-Text
+## 1. Table-to-Text
 
 ### - Requirement
 ~~~
