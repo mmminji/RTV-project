@@ -5,7 +5,7 @@
 
 import sys
 import os
-import tensorflow as tf
+import tensorflow as tfss
 import time
 from SeqUnit import *
 from DataLoader import DataLoader

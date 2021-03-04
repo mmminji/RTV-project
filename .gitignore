@@ -1,0 +1,5 @@
+## IGNORE FILE
+original_data/
+processed_data/
+results/
+__pycache__/
