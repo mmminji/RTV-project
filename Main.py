@@ -4,7 +4,7 @@
 # @Author  : Tianyu Liu
 
 import sys
-import os
+import osgggg
 import tensorflow as tf
 import time
 from SeqUnit import *
