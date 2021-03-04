@@ -1,13 +1,13 @@
 # RTV-project
 
-## 1. Tabel-to-Text
+## 1. Table-to-Text
 
 ### - Requirement
 ~~~
 python=3.7
 tensorflow==1.14.0
 nltk
-numpy<1.17
+pip install "numpy<1.17"
 ~~~
 
 ### - Process

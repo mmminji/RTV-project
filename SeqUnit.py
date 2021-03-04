@@ -53,15 +53,15 @@ class SeqUnit(object):
         self.params = {}
 
         self.encoder_input = tf.compat.v1.placeholder(tf.int32, [None, None])  ## tf.placeholder(tf.int32, [None, None])
-        self.encoder_field = tf.placeholder(tf.int32, [None, None])
-        self.encoder_pos = tf.placeholder(tf.int32, [None, None])
+        self.encoder_field = tf.compat.v1.placeholder(tf.int32, [None, None])  ## tf.placeholder(tf.int32, [None, None])
+        self.encoder_pos = tf.compat.v1.placeholder(tf.int32, [None, None])   ## tf.placeholder(tf.int32, [None, None])
         self.encoder_rpos = tf.placeholder(tf.int32, [None, None])
         self.decoder_input = tf.placeholder(tf.int32, [None, None])
         self.encoder_len = tf.placeholder(tf.int32, [None])
         self.decoder_len = tf.placeholder(tf.int32, [None])
         self.decoder_output = tf.placeholder(tf.int32, [None, None])
         self.enc_mask = tf.sign(tf.to_float(self.encoder_pos))  
-        with tf.compat.v1.variable_scope(scope_name):  ## tf.variable_scope(scope_name):  여기 바꾸는중
+        with tf.compat.v1.variable_scope(scope_name):  ## tf.variable_scope(scope_name):  
             if self.fgate_enc:
                 print ('field-gated encoder LSTM')
                 self.enc_lstm = fgateLstmUnit(self.hidden_size, self.uni_size, self.field_encoder_size, 'encoder_select')
@@ -138,9 +138,9 @@ class SeqUnit(object):
         losses = mask * losses
         self.mean_loss = tf.reduce_mean(losses)
 
-        tvars = tf.trainable_variables()
+        tvars = tf.compat.v1.trainable_variables()
         grads, _ = tf.clip_by_global_norm(tf.gradients(self.mean_loss, tvars), self.grad_clip)
-        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
         self.train_op = optimizer.apply_gradients(zip(grads, tvars))
 
     def encoder(self, inputs, inputs_len):

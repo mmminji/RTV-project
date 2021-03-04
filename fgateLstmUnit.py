@@ -15,8 +15,8 @@ class fgateLstmUnit(object):
         self.scope_name = scope_name
         self.params = {}
 
-        with tf.variable_scope(scope_name):
-            self.W = tf.get_variable('W', [self.input_size+self.hidden_size, 4*self.hidden_size])
+        with tf.compat.v1.variable_scope(scope_name):    ## tf.variable_scope(scope_name):
+            self.W = tf.compat.v1.get_variable('W', [self.input_size+self.hidden_size, 4*self.hidden_size])   ##tf.get_variable('W', [self.input_size+self.hidden_size, 4*self.hidden_size])
             self.b = tf.get_variable('b', [4*self.hidden_size], initializer=tf.zeros_initializer(), dtype=tf.float32)
             self.W1 = tf.get_variable('W1', [self.field_size, 2*self.hidden_size])
             self.b1 = tf.get_variable('b1', [2*hidden_size], initializer=tf.zeros_initializer(), dtype=tf.float32)
@@ -33,7 +33,7 @@ class fgateLstmUnit(object):
 
         x = tf.concat([x, h_prev], 1)
         # fd = tf.concat([fd, h_prev], 1)
-        i, j, f, o = tf.split(tf.nn.xw_plus_b(x, self.W, self.b), 4, 1)
+        i, j, f, o = tf.split(tf.compat.v1.nn.xw_plus_b(x, self.W, self.b), 4, 1)   ## tf.nn.xw_plus_b(x, self.W, self.b), 4, 1)
         r, d = tf.split(tf.nn.xw_plus_b(fd, self.W1, self.b1), 2, 1)
         # Final Memory cell
         c = tf.sigmoid(f+1.0) * c_prev + tf.sigmoid(i) * tf.tanh(j) + tf.sigmoid(r) * tf.tanh(d)  # batch * hidden_size

@@ -59,11 +59,11 @@ class DataLoader(object):
 
         if shuffle:
             shuffle_indices = np.random.permutation(np.arange(data_size))
-            summaries = np.array(summaries)[shuffle_indices]
-            texts = np.array(texts)[shuffle_indices]
-            fields = np.array(fields)[shuffle_indices]
-            poses = np.array(poses)[shuffle_indices]
-            rposes = np.array(rposes)[shuffle_indices]
+            summaries = np.array(summaries, dtype=object)[shuffle_indices]
+            texts = np.array(texts, dtype=object)[shuffle_indices]
+            fields = np.array(fields, dtype=object)[shuffle_indices]
+            poses = np.array(poses, dtype=object)[shuffle_indices]
+            rposes = np.array(rposes, dtype=object)[shuffle_indices]
 
         for batch_num in range(num_batches):
             start_index = batch_num * batch_size
