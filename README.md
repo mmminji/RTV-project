@@ -7,7 +7,7 @@
 python=3.7
 tensorflow==1.14.0
 nltk
-numpy<1.17
+pip install "numpy<1.17"
 ~~~
 
 ### - Process
