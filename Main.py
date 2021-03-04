@@ -215,7 +215,7 @@ def main():
                         field_concat=FLAGS.field, position_concat=FLAGS.position,
                         fgate_enc=FLAGS.fgate_encoder, dual_att=FLAGS.dual_attention, decoder_add_pos=FLAGS.decoder_pos,
                         encoder_add_pos=FLAGS.encoder_pos, learning_rate=FLAGS.learning_rate)
-        sess.run(tf.global_variables_initializer())
+        sess.run(tf.compat.v1.global_variables_initializer())
         # copy_file(save_file_dir)
         if FLAGS.load != '0':
             model.load(save_dir)
@@ -226,5 +226,5 @@ def main():
 
 
 if __name__=='__main__':
-    # with tf.device('/gpu:' + FLAGS.gpu):
-    main()
+    with tf.device('/gpu:1'):
+        main()
