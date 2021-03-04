@@ -11,7 +11,7 @@ numpy<1.17
 ~~~
 
 ### - Process
-1) Original Data Download  
+1) Original Data Download : RTV-Project 폴더 내에 다운받은 original_data 폴더 넣기  
 https://drive.google.com/drive/folders/1kCTwTwEk_CE9nc6q0snXm3lALrz_ZUDN?usp=sharing 
 2) Preprocess
 ~~~
