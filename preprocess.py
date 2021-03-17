@@ -220,7 +220,7 @@ def table2id():
         fi = open(ff, 'r', encoding='UTF8')
         fo = open(fvals2id[k], 'w')
         for line in fi:
-            items = line.strip().split()
+            items = line.strip().split(" ")
             fo.write(" ".join([str(vocab.word2id(word)) for word in items]) + '\n')
         fi.close()
         fo.close()
