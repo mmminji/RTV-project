@@ -5,7 +5,7 @@
 
 import sys
 import os
-import tensorflow as tfss
+import tensorflow as tf
 import time
 from SeqUnit import *
 from DataLoader import DataLoader
@@ -43,12 +43,34 @@ tf.app.flags.DEFINE_boolean("position", False,'concat position information to wo
 tf.app.flags.DEFINE_boolean("encoder_pos", True,'position information in field-gated encoder')
 tf.app.flags.DEFINE_boolean("decoder_pos", True,'position information in dual attention decoder')
 
-
 FLAGS = tf.app.flags.FLAGS
 last_best = 0.0
 
 gold_path_test = 'processed_data/test/test_split_for_rouge/gold_summary_'
 gold_path_valid = 'processed_data/valid/valid_split_for_rouge/gold_summary_'
+
+
+
+''''''
+### 주피터로 돌릴 떄 arg error를 ''로 채워넣음
+import traceback
+import re
+# tf.app.flags.DEFINE_string("ip", '', 'fill the ip')
+# FLAGS = tf.app.flags.FLAGS
+
+while True :
+    try :
+        FLAGS.load
+        break
+    except :
+        string = traceback.format_exc()
+        print(string)
+
+        non_word = re.findall("\'(.+?)\'", string.split("Error")[-1])
+        tf.app.flags.DEFINE_string(non_word[0], '', 'fill')
+        FLAGS = tf.app.flags.FLAGS
+        pass
+''''''
 
 # test phase
 if FLAGS.load != "0":
