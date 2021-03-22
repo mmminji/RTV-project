@@ -127,7 +127,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
         evalset = dataloader.test_set
     
     # for copy words from the infoboxes
-    texts = open(texts_path, 'r').read().strip().split('\n')
+    texts = open(texts_path, 'rt', encoding = "UTF8").read().strip().split('\n')
     texts = [list(t.strip().split()) for t in texts]
     v = Vocab()
 
@@ -141,7 +141,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
         atts = np.squeeze(atts)
         idx = 0
         for summary in np.array(predictions):
-            with open(pred_path + str(k), 'w') as sw:
+            with open(pred_path + str(k), 'w', -1, "utf-8") as sw:
                 summary = list(summary)
                 if 2 in summary:
                     summary = summary[:summary.index(2)] if summary[0] != 2 else [2]
@@ -166,7 +166,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
 
 
     for tk in range(k):
-        with open(gold_path + str(tk), 'r') as g:
+        with open(gold_path + str(tk), 'r', -1, "utf-8") as g:
             gold_list.append([g.read().strip().split()])
 
     gold_set = [[gold_path + str(i)] for i in range(k)]
@@ -179,7 +179,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
     # print copy_result
 
     for tk in range(k):
-        with open(pred_path + str(tk), 'w') as sw:
+        with open(pred_path + str(tk), 'w', -1 ,"utf-8") as sw:
             sw.write(" ".join(pred_unk[tk]) + '\n')
 
     recall, precision, F_measure = PythonROUGE(pred_set, gold_set, ngram_order=4)
