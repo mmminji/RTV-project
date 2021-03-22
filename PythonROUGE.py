@@ -73,7 +73,7 @@ def PythonROUGE(guess_summ_list,ref_summ_list,ngram_order=2):
     precision_list = list()
     F_measure_list = list()
     ROUGE_output_file = open(ROUGE_output_path,'r')
-    for n in xrange(ngram_order):
+    for n in range(ngram_order):
         ROUGE_output_file.seek(0)
         for line in ROUGE_output_file:
             match = re.findall('X ROUGE-' + str(n+1) + ' Average_R: ([0-9.]+)',line)
