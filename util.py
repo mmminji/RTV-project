@@ -93,7 +93,7 @@ def copy_file(dst, src=os.getcwd()):
             shutil.copy(os.path.join(src,file), dst)
 
 def write_word(pred_list, save_dir, name):
-    ss = open(save_dir + name, "w+")
+    ss = open(save_dir + name, "w+", -1 , "utf-8")
     for item in pred_list:
         ss.write(" ".join(item) + '\n')
             
