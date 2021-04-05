@@ -7,6 +7,7 @@
 python=3.7
 tensorflow==1.14.0
 nltk
+rouge-score
 pip install "numpy<1.17"
 ~~~
 
