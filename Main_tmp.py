@@ -20,16 +20,22 @@ tf.app.flags.DEFINE_integer("hidden_size", 500, "Size of each layer.")
 tf.app.flags.DEFINE_integer("emb_size", 400, "Size of embedding.")
 tf.app.flags.DEFINE_integer("field_size", 50, "Size of embedding.")
 tf.app.flags.DEFINE_integer("pos_size", 5, "Size of embedding.")
-tf.app.flags.DEFINE_integer("batch_size", 32, "Batch size of train set.")
-tf.app.flags.DEFINE_integer("epoch", 50, "Number of training epoch.")
-tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
+tf.app.flags.DEFINE_integer("batch_size", 256, "Batch size of train set.")
+tf.app.flags.DEFINE_integer("epoch", 10000, "Number of training epoch.")
+tf.app.flags.DEFINE_integer("source_vocab", 1107,'vocabulary size')
+#tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
+tf.app.flags.DEFINE_integer("field_vocab", 42,'vocabulary size')
+#tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
 tf.app.flags.DEFINE_integer("position_vocab", 31,'vocabulary size')
-tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("report", 5000,'report valid results after some steps')
+tf.app.flags.DEFINE_integer("target_vocab", 1107,'vocabulary size')
+#tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
+tf.app.flags.DEFINE_integer("report", 100,'report valid results after some steps')
+#tf.app.flags.DEFINE_integer("report", 18209,'report valid results after some steps')
 tf.app.flags.DEFINE_float("learning_rate", 0.0003,'learning rate')
 
 tf.app.flags.DEFINE_string("mode",'train','train or test')
+#tf.app.flags.DEFINE_string("mode",'test','train or test')
+#tf.app.flags.DEFINE_string("load",'1628077267029','load directory') # BBBBBESTOFAll
 tf.app.flags.DEFINE_string("load",'0','load directory') # BBBBBESTOFAll
 tf.app.flags.DEFINE_string("dir",'processed_data','data set directory')
 tf.app.flags.DEFINE_integer("limits", 0,'max data set size')
@@ -86,19 +92,20 @@ def train(sess, dataloader, model):
     trainset = dataloader.train_set
     k = 0
     loss, start_time = 0.0, time.time()
-    for _ in range(FLAGS.epoch):
+    for n_ep in range(FLAGS.epoch):
         for x in dataloader.batch_iter(trainset, FLAGS.batch_size, True):
             loss += model(x, sess)
             k += 1
             progress_bar(k%FLAGS.report, FLAGS.report)
             if (k % FLAGS.report == 0):
+                print("epoch : {}".format(n_ep))
                 cost_time = time.time() - start_time
                 write_log("%d : loss = %.3f, time = %.3f " % (k // FLAGS.report, loss, cost_time))
                 loss, start_time = 0.0, time.time()
                 if k // FLAGS.report >= 1: 
                     ksave_dir = save_model(model, save_dir, k // FLAGS.report)
                     write_log(evaluate(sess, dataloader, model, ksave_dir, 'valid'))
-                    
+        
 
 
 def test(sess, dataloader, model):
@@ -173,7 +180,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
     pred_set = [pred_path + str(i) for i in range(k)]
 
     recall_tmp, precision_tmp, F_measure_tmp = [],[],[]
-    scorer = rouge_scorer.RougeScorer(['rouge4'])
+    scorer = rouge_scorer.RougeScorer(['rouge1'])
     for i in range(len(pred_set)) :
         pred = open(pred_set[i], "rt", encoding="UTF8")
         pred_lines = pred.readlines()
