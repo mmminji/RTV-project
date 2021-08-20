@@ -20,16 +20,22 @@ tf.app.flags.DEFINE_integer("hidden_size", 500, "Size of each layer.")
 tf.app.flags.DEFINE_integer("emb_size", 400, "Size of embedding.")
 tf.app.flags.DEFINE_integer("field_size", 50, "Size of embedding.")
 tf.app.flags.DEFINE_integer("pos_size", 5, "Size of embedding.")
-tf.app.flags.DEFINE_integer("batch_size", 32, "Batch size of train set.")
-tf.app.flags.DEFINE_integer("epoch", 50, "Number of training epoch.")
-tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
+tf.app.flags.DEFINE_integer("batch_size", 256, "Batch size of train set.")
+tf.app.flags.DEFINE_integer("epoch", 1000, "Number of training epoch.")
+tf.app.flags.DEFINE_integer("source_vocab", 453,'vocabulary size')
+#tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
+tf.app.flags.DEFINE_integer("field_vocab", 20,'vocabulary size')
+#tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
 tf.app.flags.DEFINE_integer("position_vocab", 31,'vocabulary size')
-tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("report", 5000,'report valid results after some steps')
+tf.app.flags.DEFINE_integer("target_vocab", 453,'vocabulary size')
+#tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
+tf.app.flags.DEFINE_integer("report", 100,'report valid results after some steps')
+#tf.app.flags.DEFINE_integer("report", 18209,'report valid results after some steps')
 tf.app.flags.DEFINE_float("learning_rate", 0.0003,'learning rate')
 
 tf.app.flags.DEFINE_string("mode",'train','train or test')
+#tf.app.flags.DEFINE_string("mode",'test','train or test')
+#tf.app.flags.DEFINE_string("load",'1628077267029','load directory') # BBBBBESTOFAll
 tf.app.flags.DEFINE_string("load",'0','load directory') # BBBBBESTOFAll
 tf.app.flags.DEFINE_string("dir",'processed_data','data set directory')
 tf.app.flags.DEFINE_integer("limits", 0,'max data set size')
@@ -86,19 +92,20 @@ def train(sess, dataloader, model):
     trainset = dataloader.train_set
     k = 0
     loss, start_time = 0.0, time.time()
-    for _ in range(FLAGS.epoch):
+    for n_ep in range(FLAGS.epoch):
         for x in dataloader.batch_iter(trainset, FLAGS.batch_size, True):
             loss += model(x, sess)
             k += 1
             progress_bar(k%FLAGS.report, FLAGS.report)
             if (k % FLAGS.report == 0):
+                print("epoch : {}".format(n_ep))
                 cost_time = time.time() - start_time
                 write_log("%d : loss = %.3f, time = %.3f " % (k // FLAGS.report, loss, cost_time))
                 loss, start_time = 0.0, time.time()
                 if k // FLAGS.report >= 1: 
                     ksave_dir = save_model(model, save_dir, k // FLAGS.report)
                     write_log(evaluate(sess, dataloader, model, ksave_dir, 'valid'))
-                    
+        
 
 
 def test(sess, dataloader, model):
@@ -172,39 +179,70 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
     gold_set = [[gold_path + str(i)] for i in range(k)]
     pred_set = [pred_path + str(i) for i in range(k)]
 
-    recall_tmp, precision_tmp, F_measure_tmp = [],[],[]
-    scorer = rouge_scorer.RougeScorer(['rouge4'])
+    # recall_tmp, precision_tmp, F_measure_tmp = [],[],[]
+    # scorer = rouge_scorer.RougeScorer(['rouge1'])
+    # for i in range(len(pred_set)) :
+    #     pred = open(pred_set[i], "rt", encoding="UTF8")
+    #     pred_lines = pred.readlines()
+    #     gold = open(gold_set[i][0], "rt", encoding="UTF8")
+    #     gold_lines = gold.readlines()
+        
+    #     scores = scorer.score(pred_lines[0], gold_lines[0])
+    #     result = list(scores.values())
+
+    #     recall_tmp.append(result[0][1])
+    #     precision_tmp.append(result[0][0])
+    #     F_measure_tmp.append(result[0][2])
+
+    # recall = np.mean(recall_tmp)
+    # precision = np.mean(precision_tmp)
+    # F_measure = np.mean(F_measure_tmp)
+
+    F_measure1_tmp, F_measure2_tmp, F_measure3_tmp = [],[],[]
+    scorer1 = rouge_scorer.RougeScorer(['rouge1'])
+    scorer2 = rouge_scorer.RougeScorer(['rouge2'])
+    scorer3 = rouge_scorer.RougeScorer(['rouge3'])
+
     for i in range(len(pred_set)) :
         pred = open(pred_set[i], "rt", encoding="UTF8")
         pred_lines = pred.readlines()
         gold = open(gold_set[i][0], "rt", encoding="UTF8")
         gold_lines = gold.readlines()
         
-        scores = scorer.score(pred_lines[0], gold_lines[0])
-        result = list(scores.values())
+        scores1 = scorer1.score(pred_lines[0], gold_lines[0])
+        scores2 = scorer2.score(pred_lines[0], gold_lines[0])
+        scores3 = scorer3.score(pred_lines[0], gold_lines[0])
+        result1 = list(scores1.values())
+        result2 = list(scores2.values())
+        result3 = list(scores3.values())
 
-        recall_tmp.append(result[0][1])
-        precision_tmp.append(result[0][0])
-        F_measure_tmp.append(result[0][2])
+        F_measure1_tmp.append(result1[0][2])
+        F_measure2_tmp.append(result2[0][2])
+        F_measure3_tmp.append(result3[0][2])
 
-    recall = np.mean(recall_tmp)
-    precision = np.mean(precision_tmp)
-    F_measure = np.mean(F_measure_tmp)
+    F_measure1 = np.mean(F_measure1_tmp)
+    F_measure2 = np.mean(F_measure2_tmp)
+    F_measure3 = np.mean(F_measure3_tmp)
 
     bleu = corpus_bleu(gold_list, pred_list)
-    copy_result = "with copy F_measure: %s Recall: %s Precision: %s BLEU: %s\n" % \
-    (str(F_measure), str(recall), str(precision), str(bleu))
+    # copy_result = "with copy F_measure: %s Recall: %s Precision: %s BLEU: %s\n" % \
+    # (str(F_measure), str(recall), str(precision), str(bleu))
+    copy_result = "with copy F_measure of ROUGE1: %s ROUGE2: %s ROUGE3: %s BLEU: %s\n" % \
+    (str(F_measure1), str(F_measure2), str(F_measure3), str(bleu))
     # print copy_result
 
-    for tk in range(k):
-        with open(pred_path + str(tk), 'w', -1 ,"utf-8") as sw:
-            sw.write(" ".join(pred_unk[tk]) + '\n')
+    # for tk in range(k):
+    #     with open(pred_path + str(tk), 'w', -1 ,"utf-8") as sw:
+    #         sw.write(" ".join(pred_unk[tk]) + '\n')
 
-    bleu = corpus_bleu(gold_list, pred_unk)
-    nocopy_result = "without copy F_measure: %s Recall: %s Precision: %s BLEU: %s\n" % \
-    (str(F_measure), str(recall), str(precision), str(bleu))
+    # bleu = corpus_bleu(gold_list, pred_unk)
+    # # nocopy_result = "without copy F_measure: %s Recall: %s Precision: %s BLEU: %s\n" % \
+    # # (str(F_measure), str(recall), str(precision), str(bleu))
+    # nocopy_result = "without copy F_measure of ROUGE1: %s ROUGE2: %s ROUGE3: %s BLEU: %s\n" % \
+    # (str(F_measure1), str(F_measure2), str(F_measure3), str(bleu))
+
     # print nocopy_result
-    result = copy_result + nocopy_result 
+    result = copy_result #+ nocopy_result 
     # print result
     if mode == 'valid':
         print (result)
