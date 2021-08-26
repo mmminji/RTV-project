@@ -2,7 +2,7 @@
 
 ## 1. Table-to-Text
 
-### - Requirement
+### - Requirement(t2t)
 ~~~
 python=3.7
 tensorflow==1.14.0
