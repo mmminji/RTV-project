@@ -1,8 +1,9 @@
 # RTV-project
+## Table-to-Text
 
-## 1. Table-to-Text
 
-### - Requirement(t2t)
+
+### 1. Requirement(t2t)
 ~~~
 python=3.7
 tensorflow==1.14.0
@@ -11,8 +12,8 @@ rouge-score
 pip install "numpy<1.17"
 sklearn
 ~~~
-### - Process : our code
-1) Data Setting
+### 2. Process : our code
+1) Directory Structure
 ```sh
 .
 ├── RTV-project
@@ -43,7 +44,7 @@ python mypreprocess.py
 python Main_tmp.py
 ~~~
 
-### - Process : original code (forked from [tyliupku/wiki2bio](https://github.com/tyliupku/wiki2bio))
+### #. Process : original code (forked from [tyliupku/wiki2bio](https://github.com/tyliupku/wiki2bio))
 1) Original Data Download : RTV-Project 폴더 내에 다운받은 original_data 폴더 넣기  
 https://drive.google.com/drive/folders/1kCTwTwEk_CE9nc6q0snXm3lALrz_ZUDN?usp=sharing 
 2) Preprocess
