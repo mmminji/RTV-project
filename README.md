@@ -9,6 +9,7 @@ tensorflow==1.14.0
 nltk
 rouge-score
 pip install "numpy<1.17"
+sklearn
 ~~~
 
 ### - Process
