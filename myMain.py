@@ -14,22 +14,23 @@ from rouge_score import rouge_scorer
 from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
 from preprocess import *
 from util import * 
+import time
 
 
 tf.app.flags.DEFINE_integer("hidden_size", 500, "Size of each layer.")
 tf.app.flags.DEFINE_integer("emb_size", 400, "Size of embedding.")
 tf.app.flags.DEFINE_integer("field_size", 50, "Size of embedding.")
 tf.app.flags.DEFINE_integer("pos_size", 5, "Size of embedding.")
-tf.app.flags.DEFINE_integer("batch_size", 256, "Batch size of train set.")
+tf.app.flags.DEFINE_integer("batch_size", 128, "Batch size of train set.")
 tf.app.flags.DEFINE_integer("epoch", 1000, "Number of training epoch.")
-tf.app.flags.DEFINE_integer("source_vocab", 453,'vocabulary size')
+tf.app.flags.DEFINE_integer("source_vocab", 1107,'vocabulary size')
 #tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("field_vocab", 20,'vocabulary size')
+tf.app.flags.DEFINE_integer("field_vocab", 42,'vocabulary size')
 #tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
 tf.app.flags.DEFINE_integer("position_vocab", 31,'vocabulary size')
-tf.app.flags.DEFINE_integer("target_vocab", 453,'vocabulary size')
+tf.app.flags.DEFINE_integer("target_vocab", 1107,'vocabulary size')
 #tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("report", 100,'report valid results after some steps')
+tf.app.flags.DEFINE_integer("report", 4,'report valid results after some steps')
 #tf.app.flags.DEFINE_integer("report", 18209,'report valid results after some steps')
 tf.app.flags.DEFINE_float("learning_rate", 0.0003,'learning rate')
 
@@ -69,7 +70,7 @@ if FLAGS.load != "0":
     pred_beam_path = pred_dir + 'beam_summary_'
 # train phase
 else:
-    prefix = str(int(time.time() * 1000))
+    prefix = str(time.strftime('%Y%m%d_%H%M'))
     save_dir = 'results/res/' + prefix + '/'
     save_file_dir = save_dir + 'files/'
     pred_dir = 'results/evaluation/' + prefix + '/'
@@ -93,12 +94,12 @@ def train(sess, dataloader, model):
     k = 0
     loss, start_time = 0.0, time.time()
     for n_ep in range(FLAGS.epoch):
+        print("epoch : {}".format(n_ep+1))        
         for x in dataloader.batch_iter(trainset, FLAGS.batch_size, True):
             loss += model(x, sess)
             k += 1
             progress_bar(k%FLAGS.report, FLAGS.report)
-            if (k % FLAGS.report == 0):
-                print("epoch : {}".format(n_ep))
+            if (k % FLAGS.report == 0):                
                 cost_time = time.time() - start_time
                 write_log("%d : loss = %.3f, time = %.3f " % (k // FLAGS.report, loss, cost_time))
                 loss, start_time = 0.0, time.time()
@@ -261,7 +262,7 @@ def main():
     config = tf.compat.v1.ConfigProto(allow_soft_placement=True) ## tf.ConfigProto(allow_soft_placement=True)
     config.gpu_options.allow_growth = True
     with tf.compat.v1.Session(config=config) as sess:  ## tf.Session(config=config) as sess:
-        copy_file(save_file_dir)
+        # copy_file(save_file_dir)
         dataloader = DataLoader(FLAGS.dir, FLAGS.limits)
         model = SeqUnit(batch_size=FLAGS.batch_size, hidden_size=FLAGS.hidden_size, emb_size=FLAGS.emb_size,
                         field_size=FLAGS.field_size, pos_size=FLAGS.pos_size, field_vocab=FLAGS.field_vocab,
