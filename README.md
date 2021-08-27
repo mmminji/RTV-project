@@ -16,26 +16,25 @@ sklearn
 1) Directory Structure
 ```sh
 .
-├── RTV-project
-│   ├── mapping_dict.json
-│   ├── ...
-├── data
-│   ├── 정형모의전장자료
-│   │   ├── new_CSV
-│   │   │   ├── T_AIRFORCE_DETECT.csv
-│   │   │   ├── T_AIRFORCE_DETONATION_SAM.csv
-│   │   │   ├── T_AIRFORCE_FIRE_SAM.csv
-└── 비정형모의전장자료
-    └── 비정형모의전장자료
-        ├── 1. 수시상황보고서
-        │   ├── 01_수시상황보고서_01.txt
-        │   ├── ...
-        ├── 2. 적기 공격 임박 보고서
-        │   ├── 01_적기공격임박보고서_01.txt
-        │   ├── ...
-        └── 3. 지대공 미사일 사격 보고서
-            ├── 11_지대공미사일사격보고서_01.txt
-            └── ...
+└── RTV-project
+    ├── ...
+    ├── mapping_dict.json
+    └── RTV-data
+            ├── 정형모의전장자료
+            │           └── new_CSV
+            │                   ├── T_AIRFORCE_DETECT.csv
+            │                   ├── T_AIRFORCE_DETONATION_SAM.csv
+            │                   └── T_AIRFORCE_FIRE_SAM.csv
+            └── 비정형모의전장자료
+                        ├── 1. 수시상황보고서
+                        │   ├── 01_수시상황보고서_01.txt
+                        │   ├── ...
+                        ├── 2. 적기 공격 임박 보고서
+                        │   ├── 01_적기공격임박보고서_01.txt
+                        │   ├── ...
+                        └── 3. 지대공 미사일 사격 보고서
+                            ├── 11_지대공미사일사격보고서_01.txt
+                            └── ...
 ```
 2) Preprocess
 ~~~
