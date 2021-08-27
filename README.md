@@ -17,6 +17,8 @@ sklearn
 ```sh
 .
 ├── RTV-project
+│   ├── mapping_dict.json
+│   ├── ...
 ├── data
 │   ├── 정형모의전장자료
 │   │   ├── new_CSV
