@@ -15,14 +15,15 @@ from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
 from preprocess import *
 from util import * 
 import time
-
+import wandb
+wandb.init()
 
 tf.app.flags.DEFINE_integer("hidden_size", 500, "Size of each layer.")
 tf.app.flags.DEFINE_integer("emb_size", 400, "Size of embedding.")
 tf.app.flags.DEFINE_integer("field_size", 50, "Size of embedding.")
 tf.app.flags.DEFINE_integer("pos_size", 5, "Size of embedding.")
 tf.app.flags.DEFINE_integer("batch_size", 128, "Batch size of train set.")
-tf.app.flags.DEFINE_integer("epoch", 1000, "Number of training epoch.")
+tf.app.flags.DEFINE_integer("epoch", 100, "Number of training epoch.")
 tf.app.flags.DEFINE_integer("source_vocab", 1107,'vocabulary size')
 #tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
 tf.app.flags.DEFINE_integer("field_vocab", 42,'vocabulary size')
@@ -52,6 +53,7 @@ tf.app.flags.DEFINE_boolean("decoder_pos", True,'position information in dual at
 
 
 FLAGS = tf.app.flags.FLAGS
+wandb.config.update(FLAGS)
 last_best = 0.0
 
 gold_path_test = 'processed_data/test/test_split_for_rouge/gold_summary_'
@@ -247,7 +249,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
     # print result
     if mode == 'valid':
         print (result)
-
+    wandb.log({'F_measure1' : F_measure1, 'F_measure2' : F_measure2, 'F_measure3' : F_measure3, 'BLEU' : bleu})
     return result
 
 
