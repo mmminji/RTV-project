@@ -42,7 +42,7 @@ python mypreprocess.py
 ~~~
 3) Main
 ~~~
-python Main_tmp.py
+python myMain.py
 ~~~
 
 ### #. Process : original code (forked from [tyliupku/wiki2bio](https://github.com/tyliupku/wiki2bio))
