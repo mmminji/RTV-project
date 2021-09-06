@@ -15,8 +15,8 @@ from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
 from preprocess import *
 from util import * 
 import time
-import wandb
-wandb.init()
+# import wandb
+# wandb.init()
 
 tf.app.flags.DEFINE_integer("hidden_size", 500, "Size of each layer.")
 tf.app.flags.DEFINE_integer("emb_size", 400, "Size of embedding.")
@@ -53,7 +53,7 @@ tf.app.flags.DEFINE_boolean("decoder_pos", True,'position information in dual at
 
 
 FLAGS = tf.app.flags.FLAGS
-wandb.config.update(FLAGS)
+# wandb.config.update(FLAGS)
 last_best = 0.0
 
 gold_path_test = 'processed_data/test/test_split_for_rouge/gold_summary_'
@@ -249,7 +249,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
     # print result
     if mode == 'valid':
         print (result)
-    wandb.log({'F_measure1' : F_measure1, 'F_measure2' : F_measure2, 'F_measure3' : F_measure3, 'BLEU' : bleu})
+    # wandb.log({'F_measure1' : F_measure1, 'F_measure2' : F_measure2, 'F_measure3' : F_measure3, 'BLEU' : bleu})
     return result
 
 

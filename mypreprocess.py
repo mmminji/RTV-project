@@ -291,7 +291,7 @@ def make_dirs():
 
 if __name__ == '__main__':
     
-    with open('mapping_dict.json', 'r') as f:
+    with open('mapping_dict.json', 'r', encoding="UTF-8") as f:
         mapping_dict = json.load(f)
 
     label_txt = []
@@ -303,7 +303,12 @@ if __name__ == '__main__':
         
         if len(pth['csv_file']) == 1 :
             
-            structure_all = structure_all.append(pd.read_csv(pth['csv_file'][0]), ignore_index = True)
+            structure = pd.read_csv(pth['csv_file'][0])
+
+            if pth['threshold']:
+                structure = structure[(structure['C_AIRFORCE_DETECT_TARGET_RANGE']<30) & (structure['C_AIRFORCE_DETECT_TARGET_COURSE']>0)]
+
+            structure_all = structure_all.append(structure, ignore_index = True)
 
             total = glob.glob(pth['summary']+"/*")
             for txt_file in total :
@@ -330,7 +335,7 @@ if __name__ == '__main__':
                 with open(txt_file, 'r', encoding = 'UTF-8') as f:
                     tmp = f.read()
                     label_txt.append(re.sub('\n','',tmp).strip())
-
+                    
     structure_all = structure_all.replace({np.nan: '<none>'})
 
     train_struc, valid_struc, train_label, valid_label = train_test_split(structure_all, label_txt, test_size = 0.1, random_state = 0)
