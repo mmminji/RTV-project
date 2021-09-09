@@ -5,3 +5,4 @@ results/
 __pycache__/
 RTV_data/
 wandb/
+txt_processed/
