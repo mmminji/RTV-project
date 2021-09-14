@@ -29,6 +29,7 @@ for txt_file in total :
         tmp = tmp.replace('기가', ' 기가')  # 기가 앞에 띄어쓰기
         tmp = tmp.replace(' 오전 ', '오전')  # 오전 앞뒤 띄어쓰기 제거
         tmp = tmp.replace(' 오후 ', '오후')  # 오후 앞뒤 띄어쓰기 제거
+        tmp = tmp.replace('오후4', '오후04')  # 04시로 변경
         tmp = tmp.replace('속 도로', '속도로')  # 속 도 띄어쓰기 제거
         tmp = tmp.replace('(으)로', ' (으)로')  # (으)로 앞에 띄어쓰기
         tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
@@ -48,6 +49,7 @@ for txt_file in total :
         tmp = tmp.replace('발', ' 발')  # 발 앞에 띄어쓰기
         tmp = tmp.replace(' 오전 ', '오전')  # 오전 앞뒤 띄어쓰기 제거
         tmp = tmp.replace(' 오후 ', '오후')  # 오후 앞뒤 띄어쓰기 제거
+        tmp = tmp.replace('오후4', '오후04')  # 04시로 변경
         tmp = tmp.replace('로', ' 로')  # (으)로 앞에 띄어쓰기
         tmp = tmp.replace('에', ' 에')  # 에 앞에 띄어쓰기
         tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
@@ -67,6 +69,7 @@ for txt_file in total :
         tmp = tmp.replace('대', ' 대')  # 발 앞에 띄어쓰기
         tmp = tmp.replace(' 오전 ', '오전')  # 오전 앞뒤 띄어쓰기 제거
         tmp = tmp.replace(' 오후 ', '오후')  # 오후 앞뒤 띄어쓰기 제거
+        tmp = tmp.replace('오후4', '오후04')  # 04시로 변경
         tmp = tmp.replace('로', ' 로')  # (으)로 앞에 띄어쓰기
         tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
 

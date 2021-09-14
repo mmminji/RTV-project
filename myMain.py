@@ -24,12 +24,12 @@ tf.app.flags.DEFINE_integer("field_size", 50, "Size of embedding.")
 tf.app.flags.DEFINE_integer("pos_size", 5, "Size of embedding.")
 tf.app.flags.DEFINE_integer("batch_size", 128, "Batch size of train set.")
 tf.app.flags.DEFINE_integer("epoch", 1000, "Number of training epoch.")
-tf.app.flags.DEFINE_integer("source_vocab", 471,'vocabulary size')
+tf.app.flags.DEFINE_integer("source_vocab", 687,'vocabulary size')
 #tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("field_vocab", 42,'vocabulary size')
+tf.app.flags.DEFINE_integer("field_vocab", 43,'vocabulary size')
 #tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
 tf.app.flags.DEFINE_integer("position_vocab", 31,'vocabulary size')
-tf.app.flags.DEFINE_integer("target_vocab", 471,'vocabulary size')
+tf.app.flags.DEFINE_integer("target_vocab", 687,'vocabulary size')
 #tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
 tf.app.flags.DEFINE_integer("report", 4,'report valid results after some steps')
 #tf.app.flags.DEFINE_integer("report", 18209,'report valid results after some steps')
@@ -95,6 +95,7 @@ def train(sess, dataloader, model):
     trainset = dataloader.train_set
     k = 0
     loss, start_time = 0.0, time.time()
+    save_loss = 10000.0
     for n_ep in range(FLAGS.epoch):
         print("epoch : {}".format(n_ep+1))        
         for x in dataloader.batch_iter(trainset, FLAGS.batch_size, True):
@@ -104,10 +105,12 @@ def train(sess, dataloader, model):
             if (k % FLAGS.report == 0):                
                 cost_time = time.time() - start_time
                 write_log("%d : loss = %.3f, time = %.3f " % (k // FLAGS.report, loss, cost_time))
-                loss, start_time = 0.0, time.time()
-                if k // FLAGS.report >= 1: 
+                
+                if (k // FLAGS.report >= 1) and (loss < save_loss): 
+                    save_loss = loss
                     ksave_dir = save_model(model, save_dir, k // FLAGS.report)
                     write_log(evaluate(sess, dataloader, model, ksave_dir, 'valid'))
+                loss, start_time = 0.0, time.time()
         
 
 

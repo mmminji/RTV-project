@@ -309,6 +309,7 @@ if __name__ == '__main__':
             if pth['threshold']:
                 structure = structure[(structure['C_AIRFORCE_DETECT_TARGET_RANGE']<30) & (structure['C_AIRFORCE_DETECT_TARGET_COURSE']>0)]
 
+            structure['txt_idx'] = idx
             structure_all = structure_all.append(structure, ignore_index = True)
 
             total = glob.glob(pth['summary']+"/*")
@@ -329,6 +330,7 @@ if __name__ == '__main__':
                                         left_on = ['C' + file_name[i-1][1:] + "_" + s for s in pth['key'][i-1]],
                                         right_on = ['C' + file_name[i][1:] + "_" + s for s in pth['key'][i-1]],
                                         how = "inner")
+            concat_structure['txt_idx'] = idx
             structure_all = structure_all.append(concat_structure, ignore_index = True)
             
             total = glob.glob(pth['summary']+"/*")
@@ -403,7 +405,9 @@ if __name__ == '__main__':
     for gold_row in gold :
         tot_word.extend(gold_row.split())        
 
-    # tot_word.extend([element for array in train_struc.values for element in array])
+    tot_word.extend([element for array in train_struc.values for element in array])
+    # tot_word.extend([element for array in valid_struc.values for element in array])
+    # tot_word.extend([element for array in test_struc.values for element in array])
 
     word_count = Counter(tot_word).most_common()
     word_count = [x for x in word_count if x[1] > 0]
