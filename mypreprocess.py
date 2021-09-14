@@ -291,7 +291,7 @@ def make_dirs():
 
 if __name__ == '__main__':
     
-    with open('mapping_dict.json', 'r') as f:
+    with open('mapping_dict.json', 'r', encoding="UTF-8") as f:
         mapping_dict = json.load(f)
 
     label_txt = []
@@ -303,7 +303,14 @@ if __name__ == '__main__':
         
         if len(pth['csv_file']) == 1 :
             
-            structure_all = structure_all.append(pd.read_csv(pth['csv_file'][0]), ignore_index = True)
+            structure = pd.read_csv(pth['csv_file'][0])            
+                       
+            # threhold에 따라 보고서 매칭 - 적기공격임박보고서 - 나중에 수정해야함
+            if pth['threshold']:
+                structure = structure[(structure['C_AIRFORCE_DETECT_TARGET_RANGE']<30) & (structure['C_AIRFORCE_DETECT_TARGET_COURSE']>0)]
+
+            structure['txt_idx'] = idx
+            structure_all = structure_all.append(structure, ignore_index = True)
 
             total = glob.glob(pth['summary']+"/*")
             for txt_file in total :
@@ -323,6 +330,7 @@ if __name__ == '__main__':
                                         left_on = ['C' + file_name[i-1][1:] + "_" + s for s in pth['key'][i-1]],
                                         right_on = ['C' + file_name[i][1:] + "_" + s for s in pth['key'][i-1]],
                                         how = "inner")
+            concat_structure['txt_idx'] = idx
             structure_all = structure_all.append(concat_structure, ignore_index = True)
             
             total = glob.glob(pth['summary']+"/*")
@@ -331,6 +339,21 @@ if __name__ == '__main__':
                     tmp = f.read()
                     label_txt.append(re.sub('\n','',tmp).strip())
 
+    # 날짜시간 형식 맞추기 
+    simul_col = [s for s in structure_all.columns if 'SIMULATIONTIME' in s]
+    
+    for i in simul_col:
+        structure_all[i] = pd.to_datetime(structure_all[i])
+        structure_all[i] = structure_all[i].dt.strftime("%Y-%m-%d%p%I:%M:%S").str.replace('PM','오후').replace('AM','오전')
+    
+        # column_year_name = 'year' + "_" + i
+        # column_time_name = 'time' + "_" + i
+        # column_bef_aft = 'aft' + "_" + i
+        # structure_all[column_year_name] = structure_all[i].str.split().str[0]
+        # structure_all[column_bef_aft] = structure_all[i].str.split().str[1]
+        # structure_all[column_time_name] = structure_all[i].str.split().str[2]
+
+    structure_all = structure_all.round(2)
     structure_all = structure_all.replace({np.nan: '<none>'})
 
     train_struc, valid_struc, train_label, valid_label = train_test_split(structure_all, label_txt, test_size = 0.1, random_state = 0)
@@ -383,6 +406,8 @@ if __name__ == '__main__':
         tot_word.extend(gold_row.split())        
 
     tot_word.extend([element for array in train_struc.values for element in array])
+    # tot_word.extend([element for array in valid_struc.values for element in array])
+    # tot_word.extend([element for array in test_struc.values for element in array])
 
     word_count = Counter(tot_word).most_common()
     word_count = [x for x in word_count if x[1] > 0]

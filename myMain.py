@@ -15,21 +15,21 @@ from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
 from preprocess import *
 from util import * 
 import time
-import wandb
-wandb.init()
+# import wandb
+# wandb.init()
 
 tf.app.flags.DEFINE_integer("hidden_size", 500, "Size of each layer.")
 tf.app.flags.DEFINE_integer("emb_size", 400, "Size of embedding.")
 tf.app.flags.DEFINE_integer("field_size", 50, "Size of embedding.")
 tf.app.flags.DEFINE_integer("pos_size", 5, "Size of embedding.")
 tf.app.flags.DEFINE_integer("batch_size", 128, "Batch size of train set.")
-tf.app.flags.DEFINE_integer("epoch", 100, "Number of training epoch.")
-tf.app.flags.DEFINE_integer("source_vocab", 1107,'vocabulary size')
+tf.app.flags.DEFINE_integer("epoch", 1000, "Number of training epoch.")
+tf.app.flags.DEFINE_integer("source_vocab", 687,'vocabulary size')
 #tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("field_vocab", 42,'vocabulary size')
+tf.app.flags.DEFINE_integer("field_vocab", 43,'vocabulary size')
 #tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
 tf.app.flags.DEFINE_integer("position_vocab", 31,'vocabulary size')
-tf.app.flags.DEFINE_integer("target_vocab", 1107,'vocabulary size')
+tf.app.flags.DEFINE_integer("target_vocab", 687,'vocabulary size')
 #tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
 tf.app.flags.DEFINE_integer("report", 4,'report valid results after some steps')
 #tf.app.flags.DEFINE_integer("report", 18209,'report valid results after some steps')
@@ -46,14 +46,14 @@ tf.app.flags.DEFINE_integer("limits", 0,'max data set size')
 tf.app.flags.DEFINE_boolean("dual_attention", True,'dual attention layer or normal attention')
 tf.app.flags.DEFINE_boolean("fgate_encoder", True,'add field gate in encoder lstm')
 
-tf.app.flags.DEFINE_boolean("field", False,'concat field information to word embedding')
-tf.app.flags.DEFINE_boolean("position", False,'concat position information to word embedding')
+tf.app.flags.DEFINE_boolean("field", True,'concat field information to word embedding')
+tf.app.flags.DEFINE_boolean("position", True,'concat position information to word embedding')
 tf.app.flags.DEFINE_boolean("encoder_pos", True,'position information in field-gated encoder')
 tf.app.flags.DEFINE_boolean("decoder_pos", True,'position information in dual attention decoder')
 
 
 FLAGS = tf.app.flags.FLAGS
-wandb.config.update(FLAGS)
+# wandb.config.update(FLAGS)
 last_best = 0.0
 
 gold_path_test = 'processed_data/test/test_split_for_rouge/gold_summary_'
@@ -95,6 +95,7 @@ def train(sess, dataloader, model):
     trainset = dataloader.train_set
     k = 0
     loss, start_time = 0.0, time.time()
+    save_loss = 10000.0
     for n_ep in range(FLAGS.epoch):
         print("epoch : {}".format(n_ep+1))        
         for x in dataloader.batch_iter(trainset, FLAGS.batch_size, True):
@@ -104,10 +105,12 @@ def train(sess, dataloader, model):
             if (k % FLAGS.report == 0):                
                 cost_time = time.time() - start_time
                 write_log("%d : loss = %.3f, time = %.3f " % (k // FLAGS.report, loss, cost_time))
-                loss, start_time = 0.0, time.time()
-                if k // FLAGS.report >= 1: 
+                
+                if (k // FLAGS.report >= 1) and (loss < save_loss): 
+                    save_loss = loss
                     ksave_dir = save_model(model, save_dir, k // FLAGS.report)
                     write_log(evaluate(sess, dataloader, model, ksave_dir, 'valid'))
+                loss, start_time = 0.0, time.time()
         
 
 
@@ -249,7 +252,7 @@ def evaluate(sess, dataloader, model, ksave_dir, mode='valid'):
     # print result
     if mode == 'valid':
         print (result)
-    wandb.log({'F_measure1' : F_measure1, 'F_measure2' : F_measure2, 'F_measure3' : F_measure3, 'BLEU' : bleu})
+    # wandb.log({'F_measure1' : F_measure1, 'F_measure2' : F_measure2, 'F_measure3' : F_measure3, 'BLEU' : bleu})
     return result
 
 
