@@ -24,7 +24,6 @@ sklearn
     │       │           └── new_CSV
     │       │                   ├── T_AIRFORCE_DETECT.csv
     │       │                   ├── T_AIRFORCE_DETONATION_SAM.csv
-    │       │                   ├── T_AIRFORCE_DETONATION_SAM.csv
     │       │                   └── T_AIRFORCE_FIRE_SAM.csv
     │       └── 비정형모의전장자료
     │                   ├── 1. 수시상황보고서
