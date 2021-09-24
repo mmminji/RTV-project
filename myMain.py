@@ -2,7 +2,13 @@
 # -*- coding: utf-8 -*-
 # @Time    : 17-4-27 下午8:44
 # @Author  : Tianyu Liu
-
+#%%
+import tensorflow
+tensorflow.__version__
+#%%
+import numpy 
+numpy.__version__
+#%%
 import sys
 import os
 import tensorflow as tfss
@@ -23,13 +29,13 @@ tf.app.flags.DEFINE_integer("emb_size", 400, "Size of embedding.")
 tf.app.flags.DEFINE_integer("field_size", 50, "Size of embedding.")
 tf.app.flags.DEFINE_integer("pos_size", 5, "Size of embedding.")
 tf.app.flags.DEFINE_integer("batch_size", 128, "Batch size of train set.")
-tf.app.flags.DEFINE_integer("epoch", 1000, "Number of training epoch.")
-tf.app.flags.DEFINE_integer("source_vocab", 687,'vocabulary size')
+tf.app.flags.DEFINE_integer("epoch", 200, "Number of training epoch.")
+tf.app.flags.DEFINE_integer("source_vocab", 887,'vocabulary size')
 #tf.app.flags.DEFINE_integer("source_vocab", 20003,'vocabulary size')
-tf.app.flags.DEFINE_integer("field_vocab", 43,'vocabulary size')
+tf.app.flags.DEFINE_integer("field_vocab", 47,'vocabulary size')
 #tf.app.flags.DEFINE_integer("field_vocab", 1480,'vocabulary size')
 tf.app.flags.DEFINE_integer("position_vocab", 31,'vocabulary size')
-tf.app.flags.DEFINE_integer("target_vocab", 687,'vocabulary size')
+tf.app.flags.DEFINE_integer("target_vocab", 887,'vocabulary size')
 #tf.app.flags.DEFINE_integer("target_vocab", 20003,'vocabulary size')
 tf.app.flags.DEFINE_integer("report", 4,'report valid results after some steps')
 #tf.app.flags.DEFINE_integer("report", 18209,'report valid results after some steps')
