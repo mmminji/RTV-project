@@ -1,11 +1,6 @@
-#%%
 import glob
 import re
 
-#%%
-
-
-#%%
 before_mapping_dict = {'1': {'csv_file': ['./RTV_data/정형모의전장자료/new_CSV/T_AIRFORCE_DETECT.csv'],
   'summary': './RTV_data/비정형모의전장자료/1. 수시상황보고서',
   'key': [],
@@ -32,14 +27,13 @@ for txt_file in total :
         tmp = re.sub('Z','',tmp).strip()  # Z 제거
         tmp = tmp.replace('도', ' 도')  # 도 앞에 띄어쓰기
         tmp = tmp.replace('기가', ' 기가')  # 기가 앞에 띄어쓰기
-        tmp = tmp.replace('오전', ' 오전 ')  # 오전 앞뒤 띄어쓰기 
-        tmp = tmp.replace('오후', ' 오후 ')  # 오후 앞뒤 띄어쓰기 
+        tmp = tmp.replace(' 오전 ', '오전')  # 오전 앞뒤 띄어쓰기 제거
+        tmp = tmp.replace(' 오후 ', '오후')  # 오후 앞뒤 띄어쓰기 제거
         tmp = tmp.replace('오후4', '오후04')  # 04시로 변경
         tmp = tmp.replace('속 도로', '속도로')  # 속 도 띄어쓰기 제거
         tmp = tmp.replace('(으)로', ' (으)로')  # (으)로 앞에 띄어쓰기
         tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
- 
-        
+
     ff = open('./txt_processed/1. 수시상황보고서/{}'.format(txt_file.split('\\')[1]), 'wt', encoding = 'UTF-8')
     ff.write(tmp)
     ff.close()
@@ -53,13 +47,13 @@ for txt_file in total :
         tmp = tmp[3:]
         tmp = re.sub('\n','',tmp).strip()  # \n 제거
         tmp = tmp.replace('발', ' 발')  # 발 앞에 띄어쓰기
-        tmp = tmp.replace('오전', ' 오전 ')  # 오전 앞뒤 띄어쓰기 
-        tmp = tmp.replace('오후', ' 오후 ')  # 오후 앞뒤 띄어쓰기 
+        tmp = tmp.replace(' 오전 ', '오전')  # 오전 앞뒤 띄어쓰기 제거
+        tmp = tmp.replace(' 오후 ', '오후')  # 오후 앞뒤 띄어쓰기 제거
         tmp = tmp.replace('오후4', '오후04')  # 04시로 변경
-        tmp = tmp.replace('(으)로', ' (으)로')  # (으)로 앞에 띄어쓰기
+        tmp = tmp.replace('로', ' 로')  # (으)로 앞에 띄어쓰기
         tmp = tmp.replace('에', ' 에')  # 에 앞에 띄어쓰기
         tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
-   
+
     ff = open('./txt_processed/3. 지대공 미사일 사격 보고서/{}'.format(txt_file.split('\\')[1]), 'wt', encoding = 'UTF-8')
     ff.write(tmp)
     ff.close()
@@ -73,13 +67,12 @@ for txt_file in total :
         tmp = tmp[3:]
         tmp = re.sub('\n','',tmp).strip()  # \n 제거
         tmp = tmp.replace('대', ' 대')  # 발 앞에 띄어쓰기
-        tmp = tmp.replace('오전', ' 오전 ')  # 오전 앞뒤 띄어쓰기 
-        tmp = tmp.replace('오후', ' 오후 ')  # 오후 앞뒤 띄어쓰기 
+        tmp = tmp.replace(' 오전 ', '오전')  # 오전 앞뒤 띄어쓰기 제거
+        tmp = tmp.replace(' 오후 ', '오후')  # 오후 앞뒤 띄어쓰기 제거
         tmp = tmp.replace('오후4', '오후04')  # 04시로 변경
-        tmp = tmp.replace('(으)로', ' (으)로')  # (으)로 앞에 띄어쓰기
+        tmp = tmp.replace('로', ' 로')  # (으)로 앞에 띄어쓰기
         tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
-       
+
     ff = open('./txt_processed/2. 적기 공격 임박 보고서/{}'.format(txt_file.split('\\')[1]), 'wt', encoding = 'UTF-8')
     ff.write(tmp)
     ff.close()
-# %%
