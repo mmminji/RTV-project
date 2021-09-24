@@ -85,10 +85,10 @@ class DataLoader(object):
                 assert rpos_len == pos_len
                 gold = summary + [2] + [0] * (max_summary_len - summary_len)
                 summary = summary + [0] * (max_summary_len - summary_len)
-                text = text + [0] * (max_text_len - text_len)
-                field = field + [0] * (max_text_len - text_len)
-                pos = pos + [0] * (max_text_len - text_len)
-                rpos = rpos + [0] * (max_text_len - text_len)
+                text = list(text) + [0] * (max_text_len - text_len)
+                field = list(field) + [0] * (max_text_len - text_len)
+                pos = list(pos) + [0] * (max_text_len - text_len)
+                rpos = list(rpos) + [0] * (max_text_len - text_len)
                 
                 if max_text_len > self.man_text_len:
                     text = text[:self.man_text_len]
