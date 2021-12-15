@@ -48,6 +48,7 @@ sklearn
 ```
 2) Preprocess
 ~~~
+python ychange.py --shuffle_ration 0.2 --josa True --punctuation True
 python mypreprocess.py
 ~~~
 3) Main
