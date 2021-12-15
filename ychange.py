@@ -164,8 +164,8 @@ if __name__ == "__main__":
             tmp = tmp.replace('(으)로', ' 로')  # (으)로 앞에 띄어쓰기
             tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
             if args.shuffle_ratio > 0:
-                tmp = generate_01(re.sub('\n','',tmp).strip(),args.shuffle_ratio).shuf_gold()
-                tmp = '\t'.join(str(s) for s in tmp[0]) + '\n'
+                tmp = generate_01(re.sub('\n','',tmp).strip(),0.2).shuf_gold()
+                tmp = ''.join(tmp[0])
             if args.josa:
                 if random.random() > 0.5:
                     tmp = delete_josa(tmp)
@@ -232,7 +232,7 @@ if __name__ == "__main__":
             tmp = tmp.replace(',', ' ,')  # , 앞에 띄어쓰기
             if args.shuffle_ratio > 0:
                 tmp = generate_02(re.sub('\n','',tmp).strip(),args.shuffle_ratio).shuf_gold()
-                tmp = '\t'.join(str(s) for s in tmp[0]) + '\n'
+                tmp = ''.join(tmp[0])
             if args.punctuation:
                 if random.random() > 0.5:
                     tmp = delete_punctuation(tmp)
